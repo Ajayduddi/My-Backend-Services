@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { validationResult, matchedData, checkSchema } from 'express-validator';
-import { appointmentSchema } from '../../../utils/validationSchema.mjs';
+import { appointmentSchema } from '../../utils/validationSchema.mjs';
 import { Appointment } from '../../mongoose/medilab/appointment.mjs';
-import { createAppointmentId } from '../../../utils/helper.mjs';
+import { createAppointmentId } from '../../utils/helper.mjs';
 import passport from 'passport';
 
 const router = Router();

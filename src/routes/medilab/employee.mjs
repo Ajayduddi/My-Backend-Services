@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { validationResult, matchedData, checkSchema, body } from 'express-validator';
-import { employeeSchema } from '../../../utils/validationSchema.mjs';
-import { createEmployeeId, hashPassword } from '../../../utils/helper.mjs';
+import { employeeSchema } from '../../utils/validationSchema.mjs';
+import { createEmployeeId, hashPassword } from '../../utils/helper.mjs';
 import { Employee } from '../../mongoose/medilab/employee.mjs';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
