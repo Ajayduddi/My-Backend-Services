@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "name": "My-Backend",
+  "builds": [
+    {
+      "src": "src/app.mjs",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/src/app.mjs",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS"
+      }
+    }
+  ]
+}
