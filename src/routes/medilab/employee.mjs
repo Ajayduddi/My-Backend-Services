@@ -47,22 +47,29 @@ router.post('/createEmployee',checkSchema(employeeSchema), async (req, res) => {
 
     const data = matchedData(req);
     console.log(data);
-    const id = createEmployeeId();
-    const password = hashPassword(data.password);
-    
-    if (id && password) { 
-        try {
-            data.id = id;
-            data.password = password;
-            const employee = await Employee.create(data);
-            res.status(201).json({ result: true, message: 'Employee created successfully', data: employee });
-        } catch (error) {
-            console.log("error");
-            res.status(500).json({ result: false, message: 'Internal server error while creating employee', data: null });
-        }
+
+    const ixExists = await Employee.findOne({ email: data.email });
+    if (ixExists) {
+        res.status(400).json({ result: false, message: 'Employee already exists', data: null });
     }
     else {
-        res.status(500).json({ result: false, message: 'Internal server error while hashing or id genaration', data: null });
+        const id = createEmployeeId();
+        const password = hashPassword(data.password);
+    
+        if (id && password) {
+            try {
+                data.id = id;
+                data.password = password;
+                const employee = await Employee.create(data);
+                res.status(201).json({ result: true, message: 'Employee created successfully', data: employee });
+            } catch (error) {
+                console.log("error");
+                res.status(500).json({ result: false, message: 'Internal server error while creating employee', data: null });
+            }
+        }
+        else {
+            res.status(500).json({ result: false, message: 'Internal server error while hashing or id genaration', data: null });
+        }
     }
 });
 

@@ -49,7 +49,7 @@ export const employeeSchema = {
             withMessage: 'Password must be between 6 to 255 characters'
         }
     },
-    Address: {
+    address: {
         notEmpty: {
             withMessage: 'Address is required'
         },
