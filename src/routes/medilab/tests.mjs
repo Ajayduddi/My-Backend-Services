@@ -64,8 +64,9 @@ router.put('/editTest/:id', checkSchema(testSchema), async (req, res) => {
     }
 
     const id = String(req.params.id);
+    const data = matchedData(req);
     Test.findByIdAndUpdate(id, data).then((result) => {
-        res.status(200).send({result:true,message:"Test updated successfully",data:result});
+        res.status(200).send({result:true,message:"Test updated successfully",data:null});
     }).catch((err) => {
         console.log(err);
         res.status(500).send({result:false,message:"Internal server error while updating test",data:null});

@@ -108,19 +108,15 @@ router.put('/editEmployee/:id', jwtauth ,checkSchema(employeeSchema), async (req
     const data = matchedData(req);
     const user = await Employee.findById(id);
     if (user) {
-        hashPassword(data.password).then((hash) => {
-            data.password = hash;
-        }).catch((err) => {
-            console.log(err);
-            res.status(500).send({result:false,message:"Internal server error while hashing password",data:null});
-        });
-
-        await Employee.findByIdAndUpdate(id, data).then((result) => {
-            res.status(200).send({result:true,message:"Employee updated successfully",data:result});
-        }).catch((err) => {
-            console.log(err);
+        const hash = hashPassword(data.password);
+        data.password = hash;
+        try {
+            const result = await Employee.findByIdAndUpdate(id, data)
+            res.status(200).send({ result: true, message: "Employee updated successfully", data: null });
+        } catch (error) {
+            console.log(error);
             res.status(500).send({ result: false, message: "Internal server error while updating the data", data: null });
-        });
+        }
     } else {
         res.status(404).send({ result: false, message: "user not found", data: null });
     }
@@ -134,10 +130,10 @@ router.delete('/deleteEmployee/:id', jwtauth, async (req, res) => {
             res.status(200).send({ result: true, message: "Employee deleted successfully", data: null });
         }
         else {
-            res.status(404).send({result:false,message:"Employee not found",data:null});
+            res.status(404).send({ result: false, message: "Employee not found", data: null });
         }
     } catch (error) {
-        res.status(500).send({result:false,message:"Internal server error while deleting employee",data:null});
+        res.status(500).send({ result: false, message: "Internal server error while deleting employee", data: null });
     }
 });
 

@@ -27,7 +27,7 @@ const employeeSchema = new mongoose.Schema({
         minlength: 6,
         maxlength: 255,
     },
-    Address: {
+    address: {
         type: String,
         required: true
     },
