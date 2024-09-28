@@ -3,6 +3,7 @@ import { Gender } from '../../mongoose/gender.mjs';
 import employeeRouter from './employee.mjs';
 import testRouter from './tests.mjs';
 import appointmentRouter from './appointments.mjs';
+import passport from 'passport';
 
 // sub routes
 const router = Router();
@@ -11,12 +12,20 @@ router.get('/', (req, res) => {
     res.send('Hello from medilab!');
 });
 
-router.post('/addgender', (req, res) => {
+router.post('/addgender',passport.authenticate('jwt', { session: false }), async (req, res) => {
     const data = req.body;
-    Gender.create(data).then((result) => {
+    await Gender.create(data).then((result) => {
         res.send(result);
     }).catch((err) => {
         res.send(err);
+    });
+})
+
+router.get('/getgender',passport.authenticate('jwt', { session: false }), async (req, res) => {
+    await Gender.find().then((result) => {
+        res.status(200).send({result:true, data:result});
+    }).catch((err) => {
+        res.status(500).send({result:false, data:err});
     });
 })
 

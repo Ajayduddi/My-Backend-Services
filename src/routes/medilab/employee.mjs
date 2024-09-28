@@ -16,7 +16,7 @@ router.post('/login', [
     ], async (req, res) => { 
         const errors = validationResult(req);
         if (!errors.isEmpty()) { 
-            res.status(400).json({ result: false, message: errors.array(), data: null });
+            res.status(400).send({ result: false, message: errors.array(), data: null });
         }
 
         const data = matchedData(req);
@@ -28,13 +28,13 @@ router.post('/login', [
                     id: employee.id,
                     email: employee.email
                 },process.env.SECRET);
-                res.status(200).json({ result: true, message: 'Login successful', data: { token: `Bearer ${token}` } });
+                res.status(200).send({ result: true, message: 'Login successful', data: { token: `Bearer ${token}`,role:employee.role,name:employee.name } });
             } catch (error) {
-                res.status(500).json({ result: false, message: 'Internal server error', data: null });
+                res.status(500).send({ result: false, message: 'Internal server error', data: null });
             }
         }
         else {
-            res.status(400).json({ result: false, message: 'Invalid email or password', data: null });
+            res.status(400).send({ result: false, message: 'Invalid email or password', data: null });
         }
 });
 
@@ -42,15 +42,14 @@ router.post('/login', [
 router.post('/createEmployee',checkSchema(employeeSchema), async (req, res) => { 
     const errors = validationResult(req);
     if (!errors.isEmpty()) { 
-        res.status(400).json({ result: false, message: errors.array(), data: null });
+        res.status(400).send({ result: false, message: errors.array(), data: null });
     }
 
     const data = matchedData(req);
-    console.log(data);
 
     const ixExists = await Employee.findOne({ email: data.email });
     if (ixExists) {
-        res.status(400).json({ result: false, message: 'Employee already exists', data: null });
+        res.status(400).send({ result: false, message: 'Employee already exists', data: null });
     }
     else {
         const id = createEmployeeId();
@@ -61,14 +60,14 @@ router.post('/createEmployee',checkSchema(employeeSchema), async (req, res) => {
                 data.id = id;
                 data.password = password;
                 const employee = await Employee.create(data);
-                res.status(201).json({ result: true, message: 'Employee created successfully', data: employee });
+                res.status(201).send({ result: true, message: 'Employee created successfully', data: employee });
             } catch (error) {
                 console.log("error");
-                res.status(500).json({ result: false, message: 'Internal server error while creating employee', data: null });
+                res.status(500).send({ result: false, message: 'Internal server error while creating employee', data: null });
             }
         }
         else {
-            res.status(500).json({ result: false, message: 'Internal server error while hashing or id genaration', data: null });
+            res.status(500).send({ result: false, message: 'Internal server error while hashing or id genaration', data: null });
         }
     }
 });
@@ -77,9 +76,9 @@ router.post('/createEmployee',checkSchema(employeeSchema), async (req, res) => {
 router.get('/getAllEmployees', passport.authenticate('jwt', { session: false }), async (req, res) => { 
     try {
         const employees = await Employee.find();   
-        res.status(200).json({ result: true, message: 'Employees fetched successfully', data: employees });
+        res.status(200).send({ result: true, message: 'Employees fetched successfully', data: employees });
     } catch (error) {
-        res.status(500).json({ result: false, message: 'Internal server error while fetching employees', data: null });
+        res.status(500).send({ result: false, message: 'Internal server error while fetching employees', data: null });
     }
 });
 
@@ -89,11 +88,11 @@ router.get('/getEmployee/:id', jwtauth, async (req, res) => {
     try {
         const employee = await Employee.findById(id);
         if (!employee) {
-            res.status(404).json({ result: false, message: 'Employee not found, Invalid id', data: null });
+            res.status(404).send({ result: false, message: 'Employee not found, Invalid id', data: null });
         }
-        res.status(200).json({ result: true, message: 'Employee fetched successfully', data: employee });
+        res.status(200).send({ result: true, message: 'Employee fetched successfully', data: employee });
     } catch (error) {
-        res.status(500).json({ result: false, message: 'Internal server error while fetching employee', data: null });
+        res.status(500).send({ result: false, message: 'Internal server error while fetching employee', data: null });
     }
 });
 

@@ -12,14 +12,14 @@ const port = process.env.PORT || 3000;
 
 // cors
 app.use(cors({
-    origin: '*',
+    origin: ['http://localhost:3000',],
     credentials: true,
     maxAge: 1 * 24 * 60 * 60 // 1 day
 }))
 
 // handle preflight requests
 app.options((req, res) => {
-    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept, Origin, Set-Cookie , Access-Control-Request-Method, Access-Control-Request-Headers');
