@@ -9,12 +9,13 @@ export const hashPassword = (password) => {
 
 // compare password
 export const comparePassword = (password, hash) => { 
-    bcrypt.compareSync(password,hash).then((result) => {
-        return result;
-    }).catch((err) => {
-        console.error(err);
-        return false;
-    });
+    try {
+        const result = bcrypt.compareSync(password, hash);
+        return result
+    } catch (error) {
+        console.log(error);
+        return false
+    }
 };
 
 // create employee id

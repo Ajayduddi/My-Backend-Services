@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { validationResult, matchedData, checkSchema, body } from 'express-validator';
 import { employeeSchema } from '../../utils/validationSchema.mjs';
-import { createEmployeeId, hashPassword } from '../../utils/helper.mjs';
+import { createEmployeeId, hashPassword, comparePassword} from '../../utils/helper.mjs';
 import { Employee } from '../../mongoose/medilab/employee.mjs';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
@@ -21,8 +21,8 @@ router.post('/login', [
 
         const data = matchedData(req);
         const employee = await Employee.findOne({ email: data.email });
-
-        if (employee) {
+        const pasResult = comparePassword(data.password,employee?.password);
+        if (employee && pasResult) {
             try {
                 const token = jwt.sign({
                     id: employee.id,
