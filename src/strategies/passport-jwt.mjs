@@ -4,7 +4,7 @@ import passport from 'passport';
 
 var opts = {}
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = process.env.SECRET;
+opts.secretOrKey = process.env.JWT_SECRET;
 // opts.issuer = 'accounts.examplesoft.com';
 // opts.audience = 'yoursite.net';
 
@@ -15,9 +15,9 @@ passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
         if (user) {
             return done(null, user);
         } else {
-            return done(null, false);
+            return done(null, null);
         }
     } catch (error) {
-       return done(error, false);
+       return done(error, null);
     }
 }));

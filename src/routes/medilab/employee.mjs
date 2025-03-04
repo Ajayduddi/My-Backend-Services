@@ -16,7 +16,7 @@ router.post('/login', [
     ], async (req, res) => { 
         const errors = validationResult(req);
         if (!errors.isEmpty()) { 
-            res.status(400).send({ result: false, message: errors.array(), data: null });
+            return res.status(400).send({ result: false, message: errors.array(), data: null });
         }
 
         const data = matchedData(req);
@@ -27,7 +27,7 @@ router.post('/login', [
                 const token = jwt.sign({
                     id: employee.id,
                     email: employee.email
-                },process.env.SECRET);
+                },process.env.JWT_SECRET);
                 res.status(200).send({ result: true, message: 'Login successful', data: { token: `Bearer ${token}`,role:employee.role,name:employee.name } });
             } catch (error) {
                 res.status(500).send({ result: false, message: 'Internal server error', data: null });
